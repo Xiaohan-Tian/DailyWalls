@@ -54,7 +54,7 @@ iconutil -c icns "$ICONSET" -o "$WORK/VolumeIcon.icns" 2>/dev/null
 rm -rf "$ICONSET"
 
 echo "==> Creating read-write DMG..."
-hdiutil create -volname "$VOLNAME" -fs HFS+ -format UDRW -size 100m -ov "$RW_DMG"
+hdiutil create -volname "$VOLNAME" -fs HFS+ -size 100m -ov "$RW_DMG"
 hdiutil attach -readwrite -noverify -noautoopen "$RW_DMG"
 sleep 2
 
