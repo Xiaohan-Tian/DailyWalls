@@ -60,6 +60,7 @@ sleep 2
 
 echo "==> Populating volume..."
 cp -r "$APP_SRC" "$VOLPATH/DailyWalls.app"
+xattr -cr "$VOLPATH/DailyWalls.app" 2>/dev/null || true
 ln -s /Applications "$VOLPATH/Applications"
 mkdir -p "$VOLPATH/.background"
 cp "$BG_PNG" "$VOLPATH/.background/background.png"

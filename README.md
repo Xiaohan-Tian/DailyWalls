@@ -55,6 +55,23 @@ swift --version
 
 ---
 
+## Download & Install (Pre-built)
+
+Download the latest `.dmg` from the [Releases](https://github.com/Xiaohan-Tian/DailyWalls/releases) page — choose `arm64` for Apple Silicon (M1/M2/M3) or `x86_64` for Intel.
+
+1. Open the `.dmg` and drag `DailyWalls.app` to the **Applications** folder
+2. **macOS 15 Sequoia and later** — Apple blocks un-notarized apps by default. After copying the app, open **System Settings → Privacy & Security**, scroll down, and click **Open Anyway** next to DailyWalls.
+
+   Or run this once in Terminal:
+   ```bash
+   xattr -dr com.apple.quarantine /Applications/DailyWalls.app
+   ```
+3. Launch from `/Applications/DailyWalls.app` — the icon appears in your menu bar
+
+> This limitation exists because the app is not notarized (which requires a paid Apple Developer membership). The app itself is open source and safe to inspect.
+
+---
+
 ## Build & Install
 
 ### 1. Clone the repository
