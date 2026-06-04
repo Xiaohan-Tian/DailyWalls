@@ -29,28 +29,16 @@ jobs:
 
       - name: Package arm64 DMG
         run: |
-          mkdir dmg-staging
-          cp -r DailyWalls.app dmg-staging/
-          hdiutil create \
-            -volname "DailyWalls" \
-            -srcfolder dmg-staging \
-            -ov -format UDZO \
-            "DailyWalls-${VERSION}-arm64.dmg"
-          rm -rf dmg-staging DailyWalls.app
+          ./ci/package_dmg.sh "DailyWalls-${VERSION}-arm64.dmg" DailyWalls.app
+          rm -rf DailyWalls.app
 
       - name: Build x86_64
         run: ./build.sh --arch x86_64
 
       - name: Package x86_64 DMG
         run: |
-          mkdir dmg-staging
-          cp -r DailyWalls.app dmg-staging/
-          hdiutil create \
-            -volname "DailyWalls" \
-            -srcfolder dmg-staging \
-            -ov -format UDZO \
-            "DailyWalls-${VERSION}-x86_64.dmg"
-          rm -rf dmg-staging DailyWalls.app
+          ./ci/package_dmg.sh "DailyWalls-${VERSION}-x86_64.dmg" DailyWalls.app
+          rm -rf DailyWalls.app
 
       - name: Create GitHub Release
         env:
