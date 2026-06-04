@@ -60,8 +60,8 @@ swift --version
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-username/ms-wallpaper-rotation.git
-cd ms-wallpaper-rotation
+git clone https://github.com/Xiaohan-Tian/DailyWalls.git
+cd DailyWalls
 ```
 
 ### 2. Build and install in one step
@@ -151,7 +151,7 @@ Example: `~/Pictures/ms-wallpapers/bing/2026-06-03.jpg`
 ## Project Structure
 
 ```
-ms-wallpaper-rotation/
+DailyWalls/
 ├── Package.swift                          # Swift Package Manager manifest
 ├── Info.plist                             # App bundle metadata (LSUIElement = YES)
 ├── build.sh                               # Build + package + install script
