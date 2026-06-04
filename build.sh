@@ -2,8 +2,11 @@
 # =============================================================================
 # build.sh — Build and install DailyWalls.app
 # Usage:
-#   ./build.sh          — build only, output to ./DailyWalls.app
-#   ./build.sh install  — build + copy to /Applications
+#   ./build.sh                        — build only, output to ./DailyWalls.app
+#   ./build.sh --arch arm64           — build for Apple Silicon
+#   ./build.sh --arch x86_64          — build for Intel
+#   ./build.sh install                — build + copy to /Applications
+#   ./build.sh --arch arm64 install   — build arm64 + copy to /Applications
 # =============================================================================
 set -euo pipefail
 
@@ -11,12 +14,34 @@ APP_NAME="DailyWalls"
 BUNDLE_NAME="DailyWalls.app"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-echo "==> Building ${APP_NAME} (release)..."
-swift build -c release --product "${APP_NAME}"
+# Parse arguments: optional --arch <arm64|x86_64> and optional "install"
+ARCH=""
+INSTALL=false
+TAKE_ARCH=false
+for arg in "$@"; do
+    if [[ "$TAKE_ARCH" == true ]]; then
+        ARCH="$arg"
+        TAKE_ARCH=false
+    elif [[ "$arg" == "--arch" ]]; then
+        TAKE_ARCH=true
+    elif [[ "$arg" == "install" ]]; then
+        INSTALL=true
+    fi
+done
 
-BINARY_PATH="${SCRIPT_DIR}/.build/release/${APP_NAME}"
+if [[ -n "$ARCH" ]]; then
+    echo "==> Building ${APP_NAME} (release, ${ARCH})..."
+    swift build -c release --product "${APP_NAME}" --arch "${ARCH}"
+    BINARY_PATH="${SCRIPT_DIR}/.build/${ARCH}-apple-macosx/release/${APP_NAME}"
+    RESOURCES_BUNDLE="${SCRIPT_DIR}/.build/${ARCH}-apple-macosx/release/DailyWalls_DailyWalls.bundle"
+else
+    echo "==> Building ${APP_NAME} (release)..."
+    swift build -c release --product "${APP_NAME}"
+    BINARY_PATH="${SCRIPT_DIR}/.build/release/${APP_NAME}"
+    RESOURCES_BUNDLE="${SCRIPT_DIR}/.build/release/DailyWalls_DailyWalls.bundle"
+fi
 
-if [ ! -f "${BINARY_PATH}" ]; then
+if [[ ! -f "${BINARY_PATH}" ]]; then
     echo "ERROR: Binary not found at ${BINARY_PATH}"
     exit 1
 fi
@@ -60,8 +85,7 @@ if [ -f "${MENUBAR_PNG}" ]; then
 fi
 
 # Copy SPM-generated bundle resources (the .resources directory, if any)
-RESOURCES_BUNDLE="${SCRIPT_DIR}/.build/release/DailyWalls_DailyWalls.bundle"
-if [ -d "${RESOURCES_BUNDLE}" ]; then
+if [[ -d "${RESOURCES_BUNDLE}" ]]; then
     cp -r "${RESOURCES_BUNDLE}" "${RESOURCES_DIR}/"
 fi
 
@@ -74,7 +98,7 @@ echo "==> Built: ${APP_DIR}"
 # --------------------------------------------------------------------------
 # Optional install
 # --------------------------------------------------------------------------
-if [[ "${1:-}" == "install" ]]; then
+if [[ "$INSTALL" == true ]]; then
     INSTALL_PATH="/Applications/${BUNDLE_NAME}"
     echo "==> Installing to ${INSTALL_PATH}..."
 

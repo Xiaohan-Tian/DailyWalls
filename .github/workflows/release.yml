@@ -1,0 +1,63 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v[0-9]*.[0-9]*.[0-9]*'
+
+jobs:
+  build-and-release:
+    runs-on: macos-latest
+    if: github.actor == 'Xiaohan-Tian'
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set version from tag
+        run: echo "VERSION=${GITHUB_REF_NAME}" >> "$GITHUB_ENV"
+
+      - name: Inject version into Info.plist
+        run: |
+          /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString ${VERSION#v}" Info.plist
+          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion ${VERSION#v}" Info.plist
+
+      - name: Build arm64
+        run: ./build.sh --arch arm64
+
+      - name: Package arm64 DMG
+        run: |
+          mkdir dmg-staging
+          cp -r DailyWalls.app dmg-staging/
+          hdiutil create \
+            -volname "DailyWalls" \
+            -srcfolder dmg-staging \
+            -ov -format UDZO \
+            "DailyWalls-${VERSION}-arm64.dmg"
+          rm -rf dmg-staging DailyWalls.app
+
+      - name: Build x86_64
+        run: ./build.sh --arch x86_64
+
+      - name: Package x86_64 DMG
+        run: |
+          mkdir dmg-staging
+          cp -r DailyWalls.app dmg-staging/
+          hdiutil create \
+            -volname "DailyWalls" \
+            -srcfolder dmg-staging \
+            -ov -format UDZO \
+            "DailyWalls-${VERSION}-x86_64.dmg"
+          rm -rf dmg-staging DailyWalls.app
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "$VERSION" \
+            --title "DailyWalls $VERSION" \
+            --generate-notes \
+            "DailyWalls-${VERSION}-arm64.dmg" \
+            "DailyWalls-${VERSION}-x86_64.dmg"
