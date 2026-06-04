@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- App identity -->
+    <key>CFBundleName</key>
+    <string>DailyWalls</string>
+    <key>CFBundleDisplayName</key>
+    <string>DailyWalls</string>
+    <key>CFBundleIdentifier</key>
+    <string>com.dailywalls.app</string>
+    <key>CFBundleVersion</key>
+    <string>1</string>
+    <key>CFBundleShortVersionString</key>
+    <string>1.0.0</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleExecutable</key>
+    <string>DailyWalls</string>
+
+    <!-- App icon (shown in Finder, Launchpad, About) -->
+    <key>CFBundleIconFile</key>
+    <string>AppIcon</string>
+
+    <!-- Hide from Dock and App Switcher — menu bar only -->
+    <key>LSUIElement</key>
+    <true/>
+
+    <!-- Minimum macOS version -->
+    <key>LSMinimumSystemVersion</key>
+    <string>13.0</string>
+
+    <!-- Allow NSAppleScript for multi-space wallpaper setting -->
+    <key>NSAppleEventsUsageDescription</key>
+    <string>DailyWalls uses Apple Events to set the wallpaper on all desktops and spaces.</string>
+
+    <!-- Privacy: no camera/mic/location needed -->
+    <key>NSHighResolutionCapable</key>
+    <true/>
+</dict>
+</plist>
